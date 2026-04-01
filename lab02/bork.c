@@ -7,7 +7,7 @@
 #include <string.h>
 
 char *alloc_str(int len) {
-    return malloc(len*sizeof(char));
+    return malloc((len+1)*sizeof(char));
 }
 
 /* Str helper functions */
@@ -30,12 +30,13 @@ void free_Str(Str str) {
 Str concat(Str a, Str b) {
     int new_len = a.len + b.len;
     char *new_str = alloc_str(new_len);
-    for (int i = 0; i < a.len; ++i) {
-        new_str[i] = a.data[i];
+	for (int i = 0; i < a.len; ++i) {
+          new_str[i] = a.data[i];
     }
     for (int i = 0; i < b.len; ++i) {
         new_str[i+a.len] = b.data[i];
     }
+    new_str[new_len] = '\0';
     free(a.data);
     free(b.data);
     return (Str){.data=new_str, .len=new_len};
@@ -48,11 +49,13 @@ Str translate_to_bork(char c) {
         char *res = alloc_str(2);
         res[0] = c;
         res[1] = 'f';
+	res[2] = '\0';
         return make_Str(res);
     }
     }
     char *res = alloc_str(1);
     res[0] = c;
+    res[1] = '\0';
     return make_Str(res);
 }
 
