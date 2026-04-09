@@ -54,11 +54,15 @@ pow:
     li s0, 1
 pow_loop:
     beq a1, zero, pow_end
+    addi sp, sp, -4
+    sw s0, 0(sp)
     mul s0, s0, a0
     addi a1, a1, -1
     j pow_loop
 pow_end:
     mv a0, s0
+    lw s0, 0(sp)
+    addi sp, sp, 4
     # BEGIN EPILOGUE
     # FIXME: Need to restore the callee saved register(s)
     # END EPILOGUE
@@ -75,6 +79,10 @@ inc_arr:
     # FIXME: What other registers need to be saved?
     addi sp, sp, -4
     sw ra, 0(sp)
+    addi sp, sp, -4
+    sw s0, 0(sp)
+    addi sp, sp, -4
+    sw s1, 0(sp)
     # END PROLOGUE
     mv s0, a0 # Copy start of array to saved register
     mv s1, a1 # Copy length of array to saved register
@@ -96,6 +104,10 @@ inc_arr_loop:
 inc_arr_end:
     # BEGIN EPILOGUE
     # FIXME: What other registers need to be restored?
+    lw s1, 0(sp)
+    addi sp, sp, 4
+    lw s0, 0(sp)
+    addi sp, sp, 4
     lw ra, 0(sp)
     addi sp, sp, 4
     # END EPILOGUE
@@ -114,8 +126,12 @@ helper_fn:
     # FIXME: YOUR CODE HERE
     # END PROLOGUE
     lw t1, 0(a0)
+    addi sp, sp, -4
+    sw s0, 0(sp)
     addi s0, t1, 1
     sw s0, 0(a0)
+    lw s0, 0(sp)
+    addi sp, sp, 4
     # BEGIN EPILOGUE
     # FIXME: YOUR CODE HERE
     # END EPILOGUE
